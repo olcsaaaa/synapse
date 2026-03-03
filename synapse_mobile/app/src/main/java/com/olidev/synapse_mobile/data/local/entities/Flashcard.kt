@@ -1,10 +1,9 @@
-package com.olidev.synanapse_mobile.data.local.entities
+package com.olidev.synapse_mobile.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.util.UUID
 
 @Entity(
     tableName = "flashcards",

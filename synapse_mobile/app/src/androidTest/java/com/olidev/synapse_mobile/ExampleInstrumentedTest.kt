@@ -1,4 +1,4 @@
-package com.olidev.synanapse_mobile
+package com.olidev.synapse_mobile
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.olidev.synanapse_mobile", appContext.packageName)
+        assertEquals("com.olidev.synapse_mobile", appContext.packageName)
     }
 }

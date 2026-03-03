@@ -1,7 +1,7 @@
-package com.olidev.synanapse_mobile.data.repository
+package com.olidev.synapse_mobile.data.repository
 
-import com.olidev.synanapse_mobile.data.local.daos.UserDao
-import com.olidev.synanapse_mobile.data.local.entities.User
+import com.olidev.synapse_mobile.data.local.daos.UserDao
+import com.olidev.synapse_mobile.data.local.entities.User
 import kotlinx.coroutines.flow.Flow
 
 class UserRepository(private val userDao: UserDao) {

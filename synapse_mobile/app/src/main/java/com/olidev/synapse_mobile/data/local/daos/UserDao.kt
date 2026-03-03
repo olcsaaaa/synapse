@@ -1,10 +1,10 @@
-package com.olidev.synanapse_mobile.data.local.daos
+package com.olidev.synapse_mobile.data.local.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.olidev.synanapse_mobile.data.local.entities.User
+import com.olidev.synapse_mobile.data.local.entities.User
 import kotlinx.coroutines.flow.Flow
 
 @Dao

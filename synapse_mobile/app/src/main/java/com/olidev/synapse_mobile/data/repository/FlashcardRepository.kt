@@ -1,7 +1,7 @@
-package com.olidev.synanapse_mobile.data.repository
+package com.olidev.synapse_mobile.data.repository
 
-import com.olidev.synanapse_mobile.data.local.daos.FlashcardDao
-import com.olidev.synanapse_mobile.data.local.entities.Flashcard
+import com.olidev.synapse_mobile.data.local.daos.FlashcardDao
+import com.olidev.synapse_mobile.data.local.entities.Flashcard
 import kotlinx.coroutines.flow.Flow
 
 class FlashcardRepository(private val flashcardDao: FlashcardDao) {

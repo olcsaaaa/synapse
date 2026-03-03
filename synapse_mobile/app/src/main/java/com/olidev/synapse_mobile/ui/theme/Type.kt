@@ -1,4 +1,4 @@
-package com.olidev.synanapse_mobile.ui.theme
+package com.olidev.synapse_mobile.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

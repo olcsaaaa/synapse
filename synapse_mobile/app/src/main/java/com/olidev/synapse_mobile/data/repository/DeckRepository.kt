@@ -1,7 +1,7 @@
-package com.olidev.synanapse_mobile.data.repository
+package com.olidev.synapse_mobile.data.repository
 
-import com.olidev.synanapse_mobile.data.local.daos.DeckDao
-import com.olidev.synanapse_mobile.data.local.entities.Deck
+import com.olidev.synapse_mobile.data.local.daos.DeckDao
+import com.olidev.synapse_mobile.data.local.entities.Deck
 import kotlinx.coroutines.flow.Flow
 
 class DeckRepository(private val deckDao: DeckDao) {

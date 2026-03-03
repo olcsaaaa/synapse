@@ -1,4 +1,4 @@
-package com.olidev.synanapse_mobile
+package com.olidev.synapse_mobile
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.olidev.synanapse_mobile.ui.theme.Synanapse_mobileTheme
+import com.olidev.synapse_mobile.ui.theme.Synanapse_mobileTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.olidev.synanapse_mobile
+package com.olidev.synapse_mobile
 
 import org.junit.Test
 

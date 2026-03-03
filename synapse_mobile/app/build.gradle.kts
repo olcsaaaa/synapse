@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.olidev.synanapse_mobile"
+    namespace = "com.olidev.synapse_mobile"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.olidev.synanapse_mobile"
+        applicationId = "com.olidev.synapse_mobile"
         minSdk = 33
         targetSdk = 34
         versionCode = 1
