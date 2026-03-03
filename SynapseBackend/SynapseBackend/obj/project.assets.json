@@ -180,11 +180,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\balas_kjg31sh\\Documents\\Projects\\synapse\\synapse_backend\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
-      "projectName": "WebApplication1",
-      "projectPath": "C:\\Users\\balas_kjg31sh\\Documents\\Projects\\synapse\\synapse_backend\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectUniqueName": "C:\\Users\\balas_kjg31sh\\Documents\\Projects\\synapse\\SynapseBackend\\SynapseBackend\\SynapseBackend.csproj",
+      "projectName": "SynapseBackend",
+      "projectPath": "C:\\Users\\balas_kjg31sh\\Documents\\Projects\\synapse\\SynapseBackend\\SynapseBackend\\SynapseBackend.csproj",
       "packagesPath": "C:\\Users\\balas_kjg31sh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\balas_kjg31sh\\Documents\\Projects\\synapse\\synapse_backend\\WebApplication1\\WebApplication1\\obj\\",
+      "outputPath": "C:\\Users\\balas_kjg31sh\\Documents\\Projects\\synapse\\SynapseBackend\\SynapseBackend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\balas_kjg31sh\\AppData\\Roaming\\NuGet\\NuGet.Config"
