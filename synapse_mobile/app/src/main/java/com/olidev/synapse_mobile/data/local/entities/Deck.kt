@@ -26,6 +26,7 @@ data class Deck(
     val isShared : Boolean = false,
     val isReminderEnabled : Boolean = false,
     val nextReviewDate : Long? = null,
+    val colorSeed : Int,
 
     val lastModified : Long = System.currentTimeMillis(),
 )

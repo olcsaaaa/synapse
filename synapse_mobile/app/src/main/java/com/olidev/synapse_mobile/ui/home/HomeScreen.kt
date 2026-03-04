@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -46,13 +52,25 @@ import com.olidev.synapse_mobile.ui.theme.SynapseSpacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: DeckViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+fun HomeScreen(
+    viewModel: DeckViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    windowSize: WindowSizeClass
+) {
     val decks by viewModel.deckUiState.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState = rememberLazyListState()
     val isExpanded by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
     val haptics = LocalHapticFeedback.current
+
+    val widthClass = windowSize.widthSizeClass
+    val isTablet = widthClass != WindowWidthSizeClass.Compact
+
+    val colCount = when (widthClass) {
+        WindowWidthSizeClass.Medium -> 2
+        WindowWidthSizeClass.Expanded -> 3
+        else -> 1
+    }
 
     val spacing = SynapseSpacing
 
@@ -114,19 +132,19 @@ fun HomeScreen(viewModel: DeckViewModel = viewModel(factory = AppViewModelProvid
                 color = MaterialTheme.colorScheme.primary,
 
 
-            )
-            if(decks.isNotEmpty()){
-            Text(
-                modifier = Modifier.padding(bottom = spacing.Medium),
-                text = when (val count = decks.size){
-                    1-> "You have one deck to master"
-                    else -> "You have $count decks to master"
-                },
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight(450),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-            )
+                )
+            if (decks.isNotEmpty()) {
+                Text(
+                    modifier = Modifier.padding(bottom = spacing.Medium),
+                    text = when (val count = decks.size) {
+                        1 -> "You have one deck to master"
+                        else -> "You have $count decks to master"
+                    },
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight(450),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                )
             }
 
 
@@ -142,14 +160,19 @@ fun HomeScreen(viewModel: DeckViewModel = viewModel(factory = AppViewModelProvid
                 if (decks.isEmpty()) {
                     EmptyStateHero()
                 } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(colCount),
                         verticalArrangement = Arrangement.spacedBy(spacing.Large),
                         contentPadding = PaddingValues(spacing.Medium),
-                        state = listState
+                        modifier = Modifier.fillMaxSize(),
                     ) {
-                        items(decks) { deck ->
-                            DeckCard(deck = deck)
+                        items(decks, key = { it.id }) { deck ->
+                            val rotation =
+                                remember(deck.id) { (deck.id.hashCode() % 9 - 4).toFloat() }
+                            DeckCard(
+                                deck = deck,
+                                modifier = Modifier.rotate(rotation)
+                            )
                         }
                     }
                 }
