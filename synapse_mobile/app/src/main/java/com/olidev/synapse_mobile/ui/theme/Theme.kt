@@ -35,7 +35,7 @@ private val LightColorScheme = lightColorScheme(
 )
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun Synanapse_mobileTheme(
+fun Synapse_mobileTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -50,6 +50,8 @@ fun Synanapse_mobileTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
+
 
     MaterialExpressiveTheme(
         colorScheme = colorScheme,

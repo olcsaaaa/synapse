@@ -51,6 +51,7 @@ dependencies {
     implementation("androidx.room:room-ktx:${room_version}")
 
     implementation("androidx.work:work-runtime-ktx:2.11.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -59,7 +60,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation("androidx.compose.material3:material3:1.5.0-alpha12")
+    implementation("androidx.compose.material3:material3:1.5.0-alpha15")
     implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
