@@ -1,6 +1,7 @@
 package com.olidev.synapse_mobile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +12,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
+import com.olidev.synapse_mobile.data.local.AppDatabase
+import com.olidev.synapse_mobile.data.local.entities.User
+import com.olidev.synapse_mobile.ui.theme.SynapseTheme
 import com.olidev.synapse_mobile.ui.home.HomeScreen
-import com.olidev.synapse_mobile.ui.theme.Synapse_mobileTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 class MainActivity : ComponentActivity() {
@@ -21,7 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
         val windowSize = calculateWindowSizeClass(this)
-            Synapse_mobileTheme(){
+            SynapseTheme(){
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DeckDao {
-    @Query("SELECT * FROM decks WHERE id = :userId")
+    @Query("SELECT * FROM decks WHERE ownerId = :userId")
     fun getAllDecksByUser(userId : String): Flow<List<Deck>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

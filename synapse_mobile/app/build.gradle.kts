@@ -1,17 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
+//    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.olidev.synapse_mobile"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.olidev.synapse_mobile"
         minSdk = 33
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -31,6 +32,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
     }
@@ -38,6 +40,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.compose.material3.window.size.class1)
+    implementation(libs.androidx.material3)
     val room_version = "2.8.4"
 
     implementation("androidx.room:room-runtime:$room_version")
@@ -46,9 +49,8 @@ dependencies {
     // See Add the KSP plugin to your project
     ksp("androidx.room:room-compiler:$room_version")
 
-    // If this project only uses Java source, use the Java annotationProcessor
-    // No additional plugins are necessary
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:${room_version}")
 
     implementation("androidx.work:work-runtime-ktx:2.11.1")

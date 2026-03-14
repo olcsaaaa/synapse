@@ -17,7 +17,7 @@ val RobotoFlex = FontFamily(
         resId = R.font.roboto_flex,
         variationSettings = FontVariation.Settings(
             FontVariation.weight(400),
-            FontVariation.width(100f),
+            FontVariation.width(200f),
 
         )
     )
@@ -33,13 +33,14 @@ val RobotoFlexWide = FontFamily(
         )
     )
 )
-// Set of Material typography styles to start with
+
+
 val Typography = Typography(
     displayMedium = Typography().displayMedium.copy(
         fontFamily = RobotoFlex,
         fontWeight = FontWeight(950),
         letterSpacing = (-1.5).sp,
-        lineHeight = 52.sp
+        lineHeight = 52.sp,
     ),
     headlineLarge = Typography().headlineLarge.copy(
         fontFamily = RobotoFlex,
@@ -54,7 +55,7 @@ val Typography = Typography(
     displaySmall = Typography().displaySmall.copy(
         fontFamily = RobotoFlexWide,
         fontSize = 36.sp,
-        letterSpacing = (-1.5).sp
+        letterSpacing = (1.5).sp
     ),
     titleMedium = Typography().titleMedium.copy(fontFamily = RobotoFlex),
     labelLarge = Typography().labelLarge.copy(fontFamily = RobotoFlex),

@@ -11,15 +11,15 @@ import kotlinx.coroutines.launch
 
 class DeckViewModel(private val deckRepository: DeckRepository) : ViewModel() {
 
-    val deckUiState: StateFlow<List<Deck>> = deckRepository.getAllDecksByUserId("test_user")
+    val deckUiState: StateFlow<List<Deck>> = deckRepository.getAllDecksByUserId("TEST_ID")
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
-    fun addDeck(name: String, description: String) {
+    fun addDeck(name: String, description: String, seed: Int) {
         viewModelScope.launch {
-            val newDeck = Deck(name = name, description = description, ownerId = "test_user")
+            val newDeck = Deck(name = name, description = description, ownerId = "TEST_ID", colorSeed = seed)
             deckRepository.insertDeck(newDeck)
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.olidev.synapse_mobile.R
@@ -28,8 +29,7 @@ import com.olidev.synapse_mobile.ui.theme.SynapseSpacing
 fun EmptyStateHero() {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = SynapseSpacing.Large),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -38,7 +38,7 @@ fun EmptyStateHero() {
             .size(180.dp)
             .rotate(-15f)
             .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.extraExtraLarge
             ),
             contentAlignment = Alignment.Center
@@ -49,21 +49,22 @@ fun EmptyStateHero() {
                     .rotate(15f),
                 painter = painterResource(id = R.drawable.person_with_question_24dp),
                 contentDescription = "No decks yet...",
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                tint = MaterialTheme.colorScheme.surfaceContainerLowest,
             )
         }
 
 
-        Spacer(Modifier.height(SynapseSpacing.ExtraLarge))
+        Spacer(Modifier.height(SynapseSpacing.Large))
 
         Text(
             text = "Ready to learn?",
             style = MaterialTheme.typography.displaySmall,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().rotate(-2f)
+            modifier = Modifier.fillMaxWidth().rotate(-2f),
+            fontWeight = FontWeight(700)
         )
-
+//
         Text(
             text = "Your library is a blank canvas.\nTap below to start building.",
             style = MaterialTheme.typography.titleMedium,

@@ -6,20 +6,22 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,152 +32,135 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.olidev.synapse_mobile.R
 import com.olidev.synapse_mobile.ui.AppViewModelProvider
+import com.olidev.synapse_mobile.ui.components.AddDeckDialog
 import com.olidev.synapse_mobile.ui.components.DeckCard
 import com.olidev.synapse_mobile.ui.components.EmptyStateHero
 import com.olidev.synapse_mobile.ui.decks.DeckViewModel
 import com.olidev.synapse_mobile.ui.theme.SynapseSpacing
+import com.olidev.synapse_mobile.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalTextApi::class)
 @Composable
 fun HomeScreen(
     viewModel: DeckViewModel = viewModel(factory = AppViewModelProvider.Factory),
     windowSize: WindowSizeClass
 ) {
-    val decks by viewModel.deckUiState.collectAsState()
-
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val listState = rememberLazyListState()
-    val isExpanded by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
-    val haptics = LocalHapticFeedback.current
+    val decks by viewModel.deckUiState.collectAsStateWithLifecycle()
+    var showAddDialog by remember { mutableStateOf(false) }
 
     val widthClass = windowSize.widthSizeClass
     val isTablet = widthClass != WindowWidthSizeClass.Compact
-
     val colCount = when (widthClass) {
-        WindowWidthSizeClass.Medium -> 2
-        WindowWidthSizeClass.Expanded -> 3
+        WindowWidthSizeClass.Medium -> 3
+        WindowWidthSizeClass.Expanded -> 4
         else -> 1
     }
 
     val spacing = SynapseSpacing
+    val gridState = rememberLazyGridState()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-
         containerColor = MaterialTheme.colorScheme.surface,
-
-        topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = "Synapse",
-                        style = MaterialTheme.typography.displaySmall,
-                    )
-                },
-                scrollBehavior = scrollBehavior
-            )
-        },
-
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                },
-                expanded = isExpanded,
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.round_add_24),
-                        contentDescription = "Add Deck"
-                    )
-                },
-                text = { Text("Add Deck") },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                shape = FloatingActionButtonDefaults.extendedFabShape,
-
-                )
+            BouncingAddButton(onClick = { showAddDialog = true }, gridState = gridState)
         },
-
-
-        ) { innerPadding ->
-
-        Column(
+    ) { innerPadding ->
+        Surface(
             modifier = Modifier
-                .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
                 .fillMaxSize()
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding),
+            color = MaterialTheme.colorScheme.surfaceContainerLowest,
         ) {
-
-            Text(
-                modifier = Modifier
-                    .padding(bottom = spacing.Small)
-                    .padding(start = spacing.Medium)
-                    .rotate(-1f),
-                text = "Welcome back!",
-                style = MaterialTheme.typography.displayMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-
-
-                )
-            if (decks.isNotEmpty()) {
-                Text(
-                    modifier = Modifier.padding(bottom = spacing.Medium),
-                    text = when (val count = decks.size) {
-                        1 -> "You have one deck to master"
-                        else -> "You have $count decks to master"
-                    },
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight(450),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                )
-            }
-
-
-            Spacer(modifier = Modifier.height(spacing.Hero))
-
-            Surface(
+            LazyVerticalGrid(
+                state = gridState,
+                columns = GridCells.Fixed(colCount),
+                verticalArrangement = Arrangement.spacedBy(spacing.Hero),
+                horizontalArrangement = Arrangement.spacedBy(spacing.ExtraLarge),
+                contentPadding = PaddingValues(
+                    top = spacing.Hero,
+                    start = spacing.ExtraLarge,
+                    end = spacing.ExtraLarge,
+                    bottom = 120.dp
+                ),
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.surfaceContainerLowest,
-                shape = RoundedCornerShape(topStart = spacing.Large, spacing.Large),
-                tonalElevation = 1.dp
             ) {
-
-                if (decks.isEmpty()) {
-                    EmptyStateHero()
-                } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(colCount),
-                        verticalArrangement = Arrangement.spacedBy(spacing.Large),
-                        contentPadding = PaddingValues(spacing.Medium),
-                        modifier = Modifier.fillMaxSize(),
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Column(
+                        modifier = Modifier
+                            .padding(bottom = spacing.Large)
                     ) {
-                        items(decks, key = { it.id }) { deck ->
-                            val rotation =
-                                remember(deck.id) { (deck.id.hashCode() % 9 - 4).toFloat() }
-                            DeckCard(
-                                deck = deck,
-                                modifier = Modifier.rotate(rotation)
-                            )
+                        Text(
+                            text = "Synapse",
+                            style = Typography.displaySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                        )
+
+                        Text(
+                            modifier = Modifier.rotate(-1f),
+                            text = "Welcome back!",
+                            style = MaterialTheme.typography.displayLarge,
+                            fontWeight = FontWeight(950),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+
+                        if(!decks.isEmpty()){
+                        Text(
+                            text = "You have ${if(decks.size == 1) "one deck" else "${decks.size} decks" } to master",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                         }
+
+
                     }
                 }
+                if (decks.isEmpty()) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        EmptyStateHero()
+                    }
+                } else {
+                    items(decks, key = { it.id }) { deck ->
+                        val rotation = remember(deck.id) { ((Math.random() - 0.5f) * 8).toFloat() }
+                        DeckCard(
+                            deck = deck,
+                            modifier = Modifier.rotate(rotation)
+                        )
+                    }
+                }
+            }
+        }
+
+        if (showAddDialog) {
+            BasicAlertDialog(
+                    onDismissRequest = { showAddDialog = false },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+            ) {
+                AddDeckDialog(
+                    onDismiss = { showAddDialog = false },
+                    onSave = { name, desc, seed ->
+                        viewModel.addDeck(name, description = desc, seed)
+                        showAddDialog = false
+                    }
+
+                )
             }
         }
     }
