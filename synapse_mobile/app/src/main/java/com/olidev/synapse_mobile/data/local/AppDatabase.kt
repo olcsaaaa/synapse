@@ -21,17 +21,6 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        private val RoomCallback = object : Callback() {
-            override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-                super.onCreate(db)
-                db.execSQL("INSERT INTO users (id, name, email, createdAt) VALUES ('TEST_ID', 'Test Pilot', 'test@synapse.com', ${System.currentTimeMillis()})")
-            }
-
-            override fun onOpen(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-                super.onOpen(db)
-                db.execSQL("INSERT OR IGNORE INTO users (id, displayName, email) VALUES ('TEST_ID', 'Test Pilot', 'test@synapse.com')")
-            }
-        }
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -41,7 +30,6 @@ abstract class AppDatabase : RoomDatabase() {
                     "studycards_db"
                 )
                     .fallbackToDestructiveMigration(dropAllTables = true)
-                    .addCallback(RoomCallback)
                     .build()
 
                 INSTANCE = instance
