@@ -7,10 +7,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SynapseBackend/SynapseBackend.csproj", "SynapseBackend/"]
-RUN dotnet restore "SynapseBackend/SynapseBackend.csproj"
+COPY ["SynapseBackend/SynapseBackend/SynapseBackend.csproj", "SynapseBackend/SynapseBackend/"]
+RUN dotnet restore "SynapseBackend/SynapseBackend/SynapseBackend.csproj"
 COPY . .
-WORKDIR "/src/SynapseBackend"
+WORKDIR "/src/SynapseBackend/SynapseBackend"
 RUN dotnet build "./SynapseBackend.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
