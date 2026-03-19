@@ -1,0 +1,7 @@
+﻿services:
+  synapsebackend:
+    image: synapsebackend
+    build:
+      context: .
+      dockerfile: SynapseBackend/Dockerfile
+
