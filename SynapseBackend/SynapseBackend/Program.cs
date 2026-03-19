@@ -65,11 +65,11 @@ public class Program
             app.MapOpenApi();
         }
 
-        app.UseHttpsRedirection();
-
+        // app.UseHttpsRedirection();
+        app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-
+        app.MapControllers();
         app.Run();
     }
 }
