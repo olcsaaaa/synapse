@@ -36,6 +36,9 @@ namespace SynapseBackend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsReminderEnabled")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -69,6 +72,38 @@ namespace SynapseBackend.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Decks");
+                });
+
+            modelBuilder.Entity("SynapseBackend.Entities.Flashcard", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Back")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<Guid>("DeckId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Front")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("LastModified")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeckId");
+
+                    b.ToTable("Flashcards");
                 });
 
             modelBuilder.Entity("SynapseBackend.Entities.User", b =>
@@ -108,6 +143,22 @@ namespace SynapseBackend.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("SynapseBackend.Entities.Flashcard", b =>
+                {
+                    b.HasOne("SynapseBackend.Entities.Deck", "Deck")
+                        .WithMany("Flashcards")
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deck");
+                });
+
+            modelBuilder.Entity("SynapseBackend.Entities.Deck", b =>
+                {
+                    b.Navigation("Flashcards");
                 });
 
             modelBuilder.Entity("SynapseBackend.Entities.User", b =>
