@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -19,14 +20,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.olidev.synapse_mobile.data.local.entities.Deck
+import com.olidev.synapse_mobile.ui.home.DeckWithCount
 import com.olidev.synapse_mobile.ui.theme.SynapseSpacing
 import com.olidev.synapse_mobile.ui.theme.SynapseTheme
 
 @Composable
-fun DeckCard(deck: Deck, modifier: Modifier = Modifier) {
+fun DeckCard(
+    item: DeckWithCount,
+    onClick : () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colorScheme = MaterialTheme.colorScheme
     val extra = SynapseTheme.extraColors
 
+    val deck = item.deck
 
     val accentColor = when (deck.colorSeed % 6) {
         0 -> colorScheme.primary
@@ -37,15 +44,17 @@ fun DeckCard(deck: Deck, modifier: Modifier = Modifier) {
         else -> extra.electricViolet.color
     }
 
-    ElevatedCard(
+    Card(
+        onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(1.7f)
-            .background(color = accentColor.copy(0.4f), shape = RoundedCornerShape(SynapseSpacing.Large))
-            .border(BorderStroke(2.dp, accentColor.copy(alpha = 0.8f)),
-                shape = RoundedCornerShape(SynapseSpacing.Large)),
+            .aspectRatio(1.7f),
         shape = RoundedCornerShape(SynapseSpacing.Large),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+          containerColor = accentColor.copy(0.15f)
+        ),
+        border = BorderStroke(2.dp, accentColor.copy(0.5f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(modifier = Modifier.padding(SynapseSpacing.Medium)) {
             Text(
@@ -53,7 +62,8 @@ fun DeckCard(deck: Deck, modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.titleLarge,
                 color = accentColor,
                 fontWeight = FontWeight(900),
-                maxLines = 1
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             if (deck.description.isNotBlank()) {
@@ -62,16 +72,21 @@ fun DeckCard(deck: Deck, modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodySmall,
                     color = colorScheme.onSurfaceVariant,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "12 Cards",
-                style = MaterialTheme.typography.labelSmall,
-                color = accentColor.copy(alpha = 0.8f),
+                text = when(item.cardCount){
+                    0-> "No cards yet"
+                    1->"One card"
+                    else -> "${item.cardCount} cards"
+                },
+                style = MaterialTheme.typography.labelLarge,
+                color = accentColor,
                 fontWeight = FontWeight.Bold
             )
         }

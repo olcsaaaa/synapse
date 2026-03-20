@@ -7,7 +7,7 @@ data class DeckDto(
     val name: String,
     val description: String,
     val colorSeed: Int,
-    val updatedAt: Long
+    val lastModified: Long
     )
 
 fun DeckDto.toEntity(isSynced: Boolean, ownerId: String) : Deck = Deck(
@@ -15,7 +15,7 @@ fun DeckDto.toEntity(isSynced: Boolean, ownerId: String) : Deck = Deck(
     name = name,
     description = description,
     colorSeed = colorSeed,
-    updatedAt = updatedAt,
+    lastModified = lastModified,
     isSynced = isSynced,
     ownerId = ownerId
 )

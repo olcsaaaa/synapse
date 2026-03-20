@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.graphicsLayer
@@ -25,11 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.toPath
+import com.olidev.synapse_mobile.ui.theme.ExtraColors
 import com.olidev.synapse_mobile.ui.theme.SynapseTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun LoadingAnimation() {
+fun LoadingAnimation(color : Color = SynapseTheme.extraColors.electricViolet.color, modifier: Modifier = Modifier) {
 
     val electricViolet = SynapseTheme.extraColors.electricViolet.color
     val loadingShapes = remember {
@@ -110,7 +112,7 @@ fun LoadingAnimation() {
                 onDrawBehind {
                     drawPath(
                         path = path,
-                        color = electricViolet
+                        color = color
                     )
                 }
             }

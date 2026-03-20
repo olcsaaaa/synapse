@@ -88,15 +88,22 @@ val surfaceContainerHighDark = Color(0xFF202828)
 val surfaceContainerHighestDark = Color(0xFF2A3232)
 
 
+
+
+
+
 val quaternaryDark = Color(0xFFBF7BFF)
 val onQuaternaryDark = Color(0xFF4B0082)
-val quaternaryContainerDark = Color(0xFF5D00B0)
-val onQuaternaryContainerDark = Color(0xFFEADDFF)
+val quaternaryContainerDark = Color(0xFF7B1FD4)
+val onQuaternaryContainerDark = Color(0xFFF3E8FF)
 
-val quinaryDark = Color(0xFF99D681)
-val onQuinaryDark = Color(0xFF043900)
-val quinaryContainerDark = Color(0xFF065300)
 
-val senaryDark = Color(0xFFFFB2BE)
-val onSenaryDark = Color(0xFF660025)
-val senaryContainerDark = Color(0xFF900037)
+val quinaryDark = Color(0xFF6EE84A)
+val onQuinaryDark = Color(0xFF012800)
+val quinaryContainerDark = Color(0xFF1A7200)
+val onQuinaryContainerDark = Color(0xFFBCF5A3)
+
+val senaryDark = Color(0xFFFF6B9D)
+val onSenaryDark = Color(0xFF4D001A)
+val senaryContainerDark = Color(0xFFBF0050)
+val onSenaryContainerDark = Color(0xFFFFD9E3)
