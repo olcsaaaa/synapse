@@ -2,6 +2,7 @@ package com.olidev.synapse_mobile.data.local
 
 import android.content.Context
 import com.olidev.synapse_mobile.data.local.daos.DeckDao
+import com.olidev.synapse_mobile.data.local.daos.UserDao
 import com.olidev.synapse_mobile.data.repository.AuthRepository
 import com.olidev.synapse_mobile.data.repository.DeckRepository
 import dagger.Module
@@ -33,6 +34,12 @@ object DataModule {
     @Singleton
     fun provideDeckDao(database: AppDatabase): DeckDao {
         return database.deckDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(database: AppDatabase): UserDao {
+        return database.userDao()
     }
 
 }

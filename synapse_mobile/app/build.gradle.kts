@@ -42,6 +42,7 @@ android {
 dependencies {
     implementation(libs.androidx.compose.material3.window.size.class1)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.hilt.common)
     val roomVersion = "2.8.4"
 
     implementation("androidx.room:room-runtime:$roomVersion")

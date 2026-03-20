@@ -47,8 +47,10 @@ class AuthViewModel @Inject constructor(private val repo: AuthRepository) : View
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             val idToken = googleIdTokenCredential.idToken
 
+            val displayName = googleIdTokenCredential.displayName ?: "Synapse User"
+
             viewModelScope.launch {
-                val authResult = repo.signInWithGoogle(idToken)
+                val authResult = repo.signInWithGoogle(idToken,displayName)
 
                 authResult.onSuccess {
                     uiState = AuthUiState.Success(idToken)

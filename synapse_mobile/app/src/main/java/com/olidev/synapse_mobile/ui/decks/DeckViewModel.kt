@@ -9,10 +9,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.coroutines.flow.flatMapLatest
+import java.util.UUID
 import kotlin.collections.emptyList
 
 @HiltViewModel
@@ -38,9 +40,23 @@ class DeckViewModel @Inject constructor(
 
     fun addDeck(name: String, description: String, seed: Int) {
         viewModelScope.launch {
-            val newDeck =
-                Deck(name = name, description = description, ownerId = "TEST_ID", colorSeed = seed)
-            deckRepository.insertDeck(newDeck)
+            val uid = sessionManager.userId.first()
+
+            if (uid != null) {
+                val newDeck = Deck(
+                    id = UUID.randomUUID().toString(),
+                    ownerId = uid,
+                    name = name,
+                    description = description,
+                    colorSeed = seed,
+                    updatedAt = System.currentTimeMillis(),
+                    isSynced = false
+                )
+                deckRepository.insertDeck(newDeck)
+            }else{
+                return@launch
+            }
+
         }
     }
 }
