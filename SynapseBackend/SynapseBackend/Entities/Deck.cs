@@ -11,7 +11,7 @@ public class Deck
 
     [ForeignKey("OwnerId")] public string OwnerId { get; set; }
     [MaxLength(100)] public required string Name { get; set; }
-    [MaxLength(1000)]public string Description { get; set; } = string.Empty;
+    [MaxLength(1000)] public string Description { get; set; } = string.Empty;
 
     public bool IsShared { get; set; } = false;
 
@@ -21,6 +21,8 @@ public class Deck
 
     public long LastModified { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     public required int ColorSeed { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     public User Owner { get; set; }
+    public ICollection<Flashcard> Flashcards { get; set; } = new List<Flashcard>();
 }

@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Deck> Decks { get; set; }
+    public DbSet<Flashcard> Flashcards { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,5 +28,15 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Deck>()
             .Property(d => d.IsReminderEnabled)
             .HasDefaultValue(false);
+        
+        modelBuilder.Entity<Deck>()
+            .HasOne(d=>d.Owner)
+            .WithMany(u=>u.Decks)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Flashcard>()
+            .HasOne(f => f.Deck)
+            .WithMany(d => d.Flashcards)
+            .HasForeignKey(f => f.DeckId);
     }
 }

@@ -15,6 +15,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IDeckService, DeckService>();
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -49,10 +50,10 @@ public class Program
         app.UseForwardedHeaders(
             new ForwardedHeadersOptions()
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor|ForwardedHeaders.XForwardedProto
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             }
         );
-        
+
         using (var scope = app.Services.CreateScope())
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -64,7 +65,7 @@ public class Program
         {
             app.MapOpenApi();
         }
-        
+
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
