@@ -85,8 +85,6 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-// --- Custom Expressive Color Extensions ---
-
 @Immutable
 data class ColorFamily(
     val color: Color,
@@ -135,8 +133,8 @@ fun SynapseTheme(
     val extraColors = if (darkTheme) {
         ExtraColors(
             electricViolet = ColorFamily(quaternaryDark, onQuaternaryDark, quaternaryContainerDark, onQuaternaryContainerDark),
-            springGreen = ColorFamily(quinaryDark, onQuinaryDark, quinaryContainerDark, quinaryContainerDark),
-            vividMagenta = ColorFamily(senaryDark, onSenaryDark, senaryContainerDark, senaryContainerDark)
+            springGreen = ColorFamily(quinaryDark, onQuinaryDark, quinaryContainerDark, onQuinaryContainerDark),
+            vividMagenta = ColorFamily(senaryDark, onSenaryDark, senaryContainerDark, onSenaryContainerDark)
         )
     } else {
         ExtraColors(

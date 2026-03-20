@@ -19,9 +19,10 @@ val RobotoFlex = FontFamily(
             FontVariation.weight(400),
             FontVariation.width(200f),
 
-        )
+            )
     )
 )
+
 @OptIn(ExperimentalTextApi::class)
 val RobotoFlexWide = FontFamily(
     Font(
@@ -30,11 +31,12 @@ val RobotoFlexWide = FontFamily(
             FontVariation.weight(950),
             FontVariation.width(130f),
 
-        )
+            )
     )
 )
 
 
+@OptIn(ExperimentalTextApi::class)
 val Typography = Typography(
     displayMedium = Typography().displayMedium.copy(
         fontFamily = RobotoFlex,
@@ -56,6 +58,18 @@ val Typography = Typography(
         fontFamily = RobotoFlexWide,
         fontSize = 36.sp,
         letterSpacing = (1.5).sp
+    ),
+    headlineSmall = Typography().headlineSmall.copy(
+        fontFamily = FontFamily(
+            Font(
+                resId = R.font.roboto_flex,
+                variationSettings = FontVariation.Settings(
+                    FontVariation.weight(400),
+                    FontVariation.width(200f),
+                )
+            ),
+        ),
+        fontSize = 24.sp
     ),
     titleMedium = Typography().titleMedium.copy(fontFamily = RobotoFlex),
     labelLarge = Typography().labelLarge.copy(fontFamily = RobotoFlex),

@@ -45,6 +45,8 @@ object NetworkModule {
             .build()
     }
 
+    @Provides
+    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit{
         return Retrofit.Builder()
             .baseUrl("https://synapse.dev-oli.hu")

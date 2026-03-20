@@ -47,7 +47,8 @@ import com.olidev.synapse_mobile.ui.theme.Typography
 @Composable
 fun HomeScreen(
     viewModel: DeckViewModel = hiltViewModel(),
-    windowSize: WindowSizeClass
+    windowSize: WindowSizeClass,
+    onDeckClick: (String) -> Unit
 ) {
     val decks by viewModel.deckUiState.collectAsStateWithLifecycle()
     var showAddDialog by remember { mutableStateOf(false) }
@@ -124,11 +125,12 @@ fun HomeScreen(
                         EmptyStateHero()
                     }
                 } else {
-                    items(decks, key = { it.id }) { deck ->
-                        val rotation = remember(deck.id) { ((Math.random() - 0.5f) * 8).toFloat() }
+                    items(decks, key = { it.deck.id }) { item ->
+                        val rotation = remember(item.deck.id) { ((Math.random() - 0.5f) * 8).toFloat() }
                         DeckCard(
-                            deck = deck,
-                            modifier = Modifier.rotate(rotation)
+                            item = item,
+                            modifier = Modifier.rotate(rotation),
+                            onClick = { onDeckClick(item.deck.id) }
                         )
                     }
                 }

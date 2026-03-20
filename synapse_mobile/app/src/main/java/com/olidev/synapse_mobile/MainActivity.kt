@@ -25,6 +25,7 @@ import com.olidev.synapse_mobile.ui.AuthState
 import com.olidev.synapse_mobile.ui.MainViewModel
 import com.olidev.synapse_mobile.ui.auth.AuthScreen
 import com.olidev.synapse_mobile.ui.auth.SynapseLogo
+import com.olidev.synapse_mobile.ui.deck_details.DeckDetailsScreen
 import com.olidev.synapse_mobile.ui.home.HomeScreen
 import com.olidev.synapse_mobile.ui.theme.SynapseTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
             val windowSize = calculateWindowSizeClass(this)
 
             val mainViewModel: MainViewModel = hiltViewModel()
-            // Change this line
+
             val authState by mainViewModel.authState.collectAsStateWithLifecycle()
 
             val navController = rememberNavController()
@@ -76,7 +77,25 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                                 composable("home") {
-                                    HomeScreen(windowSize = windowSize)
+                                    HomeScreen(
+                                        windowSize = windowSize,
+                                        onDeckClick = { deckId ->
+                                            navController.navigate("deck_details/$deckId")
+                                        }
+                                    )
+                                }
+                                composable(
+                                    route = "deck_details/{deckId}", arguments = listOf(
+                                        androidx.navigation.navArgument("deckId") {
+                                            type = androidx.navigation.NavType.StringType
+                                        }
+                                    )
+                                ) {
+                                    DeckDetailsScreen(
+                                        onNavigateBack = {navController.popBackStack()},
+                                        onStartPracticing = {
+                                        }
+                                    )
                                 }
                             }
                         }

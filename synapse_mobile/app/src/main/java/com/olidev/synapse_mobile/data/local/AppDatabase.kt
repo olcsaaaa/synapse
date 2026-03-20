@@ -11,7 +11,7 @@ import com.olidev.synapse_mobile.data.local.entities.Deck
 import com.olidev.synapse_mobile.data.local.entities.Flashcard
 import com.olidev.synapse_mobile.data.local.entities.User
 
-@Database(entities = [User::class, Deck::class, Flashcard::class], version = 3, exportSchema = true)
+@Database(entities = [User::class, Deck::class, Flashcard::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun deckDao(): DeckDao

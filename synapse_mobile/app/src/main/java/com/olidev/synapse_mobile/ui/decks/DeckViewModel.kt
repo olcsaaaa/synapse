@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.olidev.synapse_mobile.data.local.SessionManager
 import com.olidev.synapse_mobile.data.local.entities.Deck
 import com.olidev.synapse_mobile.data.repository.DeckRepository
+import com.olidev.synapse_mobile.ui.home.DeckWithCount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,10 +25,10 @@ class DeckViewModel @Inject constructor(
 ) : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val deckUiState: StateFlow<List<Deck>> = sessionManager.userId
+    val deckUiState: StateFlow<List<DeckWithCount>> = sessionManager.userId
         .flatMapLatest { userId ->
             if (userId != null) {
-                deckRepository.getAllDecksByUserId(userId)
+                deckRepository.getDecksWithCount(userId)
             } else {
                 kotlinx.coroutines.flow.flowOf(emptyList())
             }
@@ -49,7 +50,7 @@ class DeckViewModel @Inject constructor(
                     name = name,
                     description = description,
                     colorSeed = seed,
-                    updatedAt = System.currentTimeMillis(),
+                    lastModified = System.currentTimeMillis(),
                     isSynced = false
                 )
                 deckRepository.insertDeck(newDeck)

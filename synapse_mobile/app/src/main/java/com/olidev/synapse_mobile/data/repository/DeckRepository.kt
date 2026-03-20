@@ -11,6 +11,7 @@ import com.olidev.synapse_mobile.data.local.daos.DeckDao
 import com.olidev.synapse_mobile.data.local.dtos.DeckDto
 import com.olidev.synapse_mobile.data.local.dtos.toEntity
 import com.olidev.synapse_mobile.data.local.entities.Deck
+import com.olidev.synapse_mobile.ui.home.DeckWithCount
 import com.olidev.synapse_mobile.workers.DeckSyncWorker
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +24,8 @@ class DeckRepository @Inject constructor(
 ) {
 
     fun getAllDecksByUserId(userId: String): Flow<List<Deck>> = deckDao.getAllDecksByUser(userId)
+
+    fun getDeckById(deckId: String): Flow<Deck?> = deckDao.getDeckById(deckId)
 
     suspend fun insertDeck(deck: Deck) {
         deckDao.insertDeck(deck.copy(isSynced = false))
@@ -50,6 +53,10 @@ class DeckRepository @Inject constructor(
     suspend fun deleteDeck(deck: Deck) {
         deckDao.markAsDeleted(listOf(deck.id))
         triggerBackgroundSync(deck.id)
+    }
+
+    fun getDecksWithCount(userId: String): Flow<List<DeckWithCount>> {
+        return deckDao.getDecksWithCount(userId)
     }
 
     private suspend fun triggerBackgroundSync(deckId: String) {

@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity(
     tableName = "flashcards",
@@ -18,8 +19,11 @@ import androidx.room.PrimaryKey
     indices = [Index("deckId")]
 )
 data class Flashcard(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val deckId : String,
     val front: String,
     val back: String,
+    val isSynced : Boolean = false,
+    val lastModified : Long = System.currentTimeMillis(),
+    val isDeleted : Boolean = false
 )
