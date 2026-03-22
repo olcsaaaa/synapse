@@ -33,10 +33,12 @@ import com.olidev.synapse_mobile.ui.theme.Typography
 fun AddFlashCardSheet(
     onDismiss: () -> Unit,
     onSave: (front: String, back: String) -> Unit,
-    colorSeed: Int
+    colorSeed: Int,
+    initialFront : String = "",
+    initialBack : String = ""
 ) {
-    val frontState = rememberTextFieldState()
-    val backState = rememberTextFieldState()
+    val frontState = rememberTextFieldState(initialFront)
+    val backState = rememberTextFieldState(initialBack)
 
     val extra = SynapseTheme.extraColors
     val colors = MaterialTheme.colorScheme

@@ -176,7 +176,7 @@ fun DeckDetailsScreen(
                                 FlashCardListItem(
                                     front = card.front,
                                     back = card.back,
-                                    onEdit = { viewModel.editCard(card.front, card.back) },
+                                    onEdit = { viewModel.startEditingCard(card) },
                                     onDelete = { viewModel.deleteCard(card) },
                                     color = selectedColorPairing.color
                                 )
@@ -186,15 +186,6 @@ fun DeckDetailsScreen(
                         item { Spacer(modifier = Modifier.height(120.dp)) }
                     }
                 }
-            }
-
-
-            if (viewModel.isAddCardSheetVisible) {
-                AddFlashCardSheet(
-                    onDismiss = { viewModel.toggleAddCardSheet(false) },
-                    onSave = { front, back -> viewModel.addCard(front, back) },
-                    colorSeed = uiState.deck?.colorSeed ?: 0
-                )
             }
 
             if (showEditDeckDialog) {
@@ -221,6 +212,18 @@ fun DeckDetailsScreen(
                         showDeleteConfirm = false
                     },
                     onDismiss = { showDeleteConfirm = false }
+                )
+            }
+
+            if (viewModel.isAddCardSheetVisible) {
+                AddFlashCardSheet(
+                    initialFront = viewModel.editingCard?.front ?: "",
+                    initialBack = viewModel.editingCard?.back ?: "",
+                    onDismiss = { viewModel.clearEditingState() },
+                    onSave = { front, back ->
+                        viewModel.saveCard(front, back)
+                    },
+                    colorSeed = uiState.deck?.colorSeed ?: 0
                 )
             }
         }

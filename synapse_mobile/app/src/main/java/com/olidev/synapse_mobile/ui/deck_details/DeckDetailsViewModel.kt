@@ -27,8 +27,10 @@ class DeckDetailsViewModel @Inject constructor(
     private val deckId: String =
         savedStateHandle["deckId"] ?: throw IllegalArgumentException("Deck ID is required")
 
+
     var isAddCardSheetVisible by mutableStateOf(false)
-    var isEditCardSheetVisible by mutableStateOf(false)
+    var editingCard by mutableStateOf<Flashcard?>(null)
+        private set
 
     val uiState: StateFlow<DeckDetailsUiState> = combine(
         deckRepository.getDeckById(deckId),
@@ -46,12 +48,6 @@ class DeckDetailsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = DeckDetailsUiState(isLoading = true)
         )
-
-    fun addCard(front: String, back: String) {
-        viewModelScope.launch {
-            flashcardRepository.addCard(front, back, deckId)
-        }
-    }
 
     fun toggleAddCardSheet(visible: Boolean) {
         isAddCardSheetVisible = visible
@@ -79,8 +75,27 @@ class DeckDetailsViewModel @Inject constructor(
         }
     }
 
-    fun editCard(front: String, back: String){
+    fun startEditingCard(card: Flashcard) {
+        editingCard = card
+        toggleAddCardSheet(true)
+    }
 
+    fun clearEditingState() {
+        editingCard = null
+        toggleAddCardSheet(false)
+    }
+
+    fun saveCard(front: String, back: String) {
+        val currentCard = editingCard
+        viewModelScope.launch {
+            if (currentCard != null) {
+                flashcardRepository.updateCard(currentCard.copy(front = front, back = back))
+            } else {
+                val deckId = uiState.value.deck?.id ?: return@launch
+                flashcardRepository.addCard(front, back, deckId)
+            }
+            clearEditingState()
+        }
     }
 
 }
