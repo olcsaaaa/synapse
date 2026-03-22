@@ -51,10 +51,10 @@ fun DeckCard(
             .aspectRatio(1.7f),
         shape = RoundedCornerShape(SynapseSpacing.Large),
         colors = CardDefaults.cardColors(
-          containerColor = accentColor.copy(0.15f)
+            containerColor = colorScheme.surfaceContainerLow,
         ),
         border = BorderStroke(2.dp, accentColor.copy(0.5f)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(modifier = Modifier.padding(SynapseSpacing.Medium)) {
             Text(

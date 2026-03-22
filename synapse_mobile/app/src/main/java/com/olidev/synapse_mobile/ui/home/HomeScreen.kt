@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.olidev.synapse_mobile.ui.components.AddDeckDialog
+import com.olidev.synapse_mobile.ui.components.DeckFormDialog
 import com.olidev.synapse_mobile.ui.components.DeckCard
 import com.olidev.synapse_mobile.ui.components.EmptyStateHero
 import com.olidev.synapse_mobile.ui.decks.DeckViewModel
@@ -42,8 +42,10 @@ import com.olidev.synapse_mobile.ui.theme.SynapseSpacing
 import com.olidev.synapse_mobile.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalTextApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalTextApi::class
+)
 @Composable
 fun HomeScreen(
     viewModel: DeckViewModel = hiltViewModel(),
@@ -104,17 +106,17 @@ fun HomeScreen(
                         Text(
                             modifier = Modifier.rotate(-1f),
                             text = "Welcome back!",
-                            style = MaterialTheme.typography.displayLarge,
+                            style = Typography.displayLarge,
                             fontWeight = FontWeight(950),
                             color = MaterialTheme.colorScheme.primary,
                         )
 
-                        if(!decks.isEmpty()){
-                        Text(
-                            text = "You have ${if(decks.size == 1) "one deck" else "${decks.size} decks" } to master",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        if (!decks.isEmpty()) {
+                            Text(
+                                text = "You have ${if (decks.size == 1) "one deck" else "${decks.size} decks"} to master",
+                                style = Typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
 
 
@@ -126,7 +128,8 @@ fun HomeScreen(
                     }
                 } else {
                     items(decks, key = { it.deck.id }) { item ->
-                        val rotation = remember(item.deck.id) { ((Math.random() - 0.5f) * 8).toFloat() }
+                        val rotation =
+                            remember(item.deck.id) { ((Math.random() - 0.5f) * 8).toFloat() }
                         DeckCard(
                             item = item,
                             modifier = Modifier.rotate(rotation),
@@ -138,21 +141,16 @@ fun HomeScreen(
         }
 
         if (showAddDialog) {
-            BasicAlertDialog(
-                    onDismissRequest = { showAddDialog = false },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-            ) {
-                AddDeckDialog(
-                    onDismiss = { showAddDialog = false },
-                    onSave = { name, desc, seed ->
-                        viewModel.addDeck(name, description = desc, seed)
-                        showAddDialog = false
-                    }
 
-                )
-            }
+            DeckFormDialog(
+                onDismiss = { showAddDialog = false },
+                onSave = { name, desc, seed ->
+                    viewModel.addDeck(name, description = desc, seed)
+                    showAddDialog = false
+                }
+
+            )
+
         }
     }
 }

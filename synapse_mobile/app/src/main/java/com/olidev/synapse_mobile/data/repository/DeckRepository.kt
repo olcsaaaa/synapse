@@ -28,16 +28,20 @@ class DeckRepository @Inject constructor(
     fun getDeckById(deckId: String): Flow<Deck?> = deckDao.getDeckById(deckId)
 
     suspend fun insertDeck(deck: Deck) {
-        deckDao.insertDeck(deck.copy(isSynced = false))
+        deckDao.insertDeck(deck.copy(isSynced = false, lastModified = System.currentTimeMillis()))
         triggerBackgroundSync(deck.id)
     }
 
     suspend fun updateDeck(deck: Deck) {
-        deckDao.updateDeck(deck.copy(isSynced = false))
+        deckDao.updateDeck(deck.copy(isSynced = false, lastModified = System.currentTimeMillis()))
 
         triggerBackgroundSync(deck.id)
     }
 
+    suspend fun deleteDeck(deck: Deck) {
+        deckDao.markAsDeleted(listOf(deck.id))
+        triggerBackgroundSync(deck.id)
+    }
     suspend fun syncDecks(userId: String) {
         try {
             val remoteDecks: List<DeckDto> = api.getAllDecks(userId).body() ?: emptyList()
@@ -48,11 +52,6 @@ class DeckRepository @Inject constructor(
             deckDao.upsertDecks(freshDecks)
         } catch (e: Exception) {
         }
-    }
-
-    suspend fun deleteDeck(deck: Deck) {
-        deckDao.markAsDeleted(listOf(deck.id))
-        triggerBackgroundSync(deck.id)
     }
 
     fun getDecksWithCount(userId: String): Flow<List<DeckWithCount>> {

@@ -7,6 +7,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.olidev.synapse_mobile.data.local.SynapseApi
+import com.olidev.synapse_mobile.data.local.daos.DeckDao
 import com.olidev.synapse_mobile.data.local.daos.FlashcardDao
 import com.olidev.synapse_mobile.data.local.entities.Flashcard
 import com.olidev.synapse_mobile.workers.FlashcardSyncWorker
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 
 class FlashcardRepository @Inject constructor(
+    private val deckDao: DeckDao,
     private val flashcardDao: FlashcardDao,
     private val api: SynapseApi,
     @param:ApplicationContext private val context: Context
@@ -32,16 +34,23 @@ class FlashcardRepository @Inject constructor(
             isDeleted = false,
             lastModified = System.currentTimeMillis()
         )
+        deckDao.touchDeck(deckId)
         flashcardDao.insertCard(card)
         triggerBackgroundSync(card.id)
     }
 
     suspend fun updateCard(card: Flashcard) {
-        flashcardDao.updateCard(card.copy(isSynced = false, lastModified = System.currentTimeMillis()))
+        flashcardDao.updateCard(
+            card.copy(
+                isSynced = false,
+                lastModified = System.currentTimeMillis()
+            )
+        )
     }
 
     suspend fun deleteCard(card: Flashcard) {
         flashcardDao.markAsDeleted(listOf(card.id))
+        deckDao.touchDeck(card.deckId)
         triggerBackgroundSync(card.id)
     }
 

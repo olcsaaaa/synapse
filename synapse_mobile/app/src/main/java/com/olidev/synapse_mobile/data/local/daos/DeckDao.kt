@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Update
 import com.olidev.synapse_mobile.data.local.entities.Deck
 import com.olidev.synapse_mobile.ui.home.DeckWithCount
@@ -43,13 +44,20 @@ interface DeckDao {
     @Delete
     suspend fun hardDeleteDeck(deck: Deck): Int
 
-    @Query("""
+    @RewriteQueriesToDropUnusedColumns
+    @Query(
+        """
     SELECT decks.*, COUNT(flashcards.id) as cardCount 
     FROM decks 
     LEFT JOIN flashcards ON decks.id = flashcards.deckId 
+            AND flashcards.isDeleted = 0
     WHERE decks.ownerId = :userId AND decks.isDeleted = 0 
     GROUP BY decks.id
-""")
+"""
+    )
     fun getDecksWithCount(userId: String): Flow<List<DeckWithCount>>
 
+
+    @Query("UPDATE decks SET lastModified = :timestamp, isSynced = 0 WHERE id = :deckId")
+    suspend fun touchDeck(deckId: String, timestamp: Long = System.currentTimeMillis())
 }

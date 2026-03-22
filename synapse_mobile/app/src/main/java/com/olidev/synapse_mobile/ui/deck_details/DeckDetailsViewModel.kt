@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.olidev.synapse_mobile.data.local.entities.Flashcard
 import com.olidev.synapse_mobile.data.repository.DeckRepository
 import com.olidev.synapse_mobile.data.repository.FlashcardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,12 +22,13 @@ import javax.inject.Inject
 class DeckDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val deckRepository: DeckRepository,
-    private val flashcardRepository: FlashcardRepository
+    private val flashcardRepository: FlashcardRepository,
 ) : ViewModel() {
     private val deckId: String =
         savedStateHandle["deckId"] ?: throw IllegalArgumentException("Deck ID is required")
 
     var isAddCardSheetVisible by mutableStateOf(false)
+    var isEditCardSheetVisible by mutableStateOf(false)
 
     val uiState: StateFlow<DeckDetailsUiState> = combine(
         deckRepository.getDeckById(deckId),
@@ -55,18 +57,30 @@ class DeckDetailsViewModel @Inject constructor(
         isAddCardSheetVisible = visible
     }
 
-    fun updateDeck(newName: String, newColorSeed: Int) {
+
+    fun updateDeck(newName: String, newDescription: String, newColorSeed: Int) {
         val currentDeck = uiState.value.deck ?: return
         viewModelScope.launch {
-            deckRepository.updateDeck(currentDeck.copy(name = newName, colorSeed = newColorSeed))
+            deckRepository.updateDeck(currentDeck.copy(name = newName, description = newDescription, colorSeed = newColorSeed))
         }
     }
 
-    fun deleteDeck() {
+    fun deleteDeck(onComplete : ()-> Unit) {
         val currentDeck = uiState.value.deck ?: return
         viewModelScope.launch {
             deckRepository.deleteDeck(currentDeck)
-            /*TODO: ADD NAVIGATION AFTER DECK DELETE*/
+            onComplete()
         }
     }
+
+    fun deleteCard(currentCard: Flashcard){
+        viewModelScope.launch {
+            flashcardRepository.deleteCard(currentCard)
+        }
+    }
+
+    fun editCard(front: String, back: String){
+
+    }
+
 }
