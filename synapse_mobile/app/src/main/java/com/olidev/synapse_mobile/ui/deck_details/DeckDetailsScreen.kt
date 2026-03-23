@@ -4,42 +4,36 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 
 
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.olidev.synapse_mobile.R
-import com.olidev.synapse_mobile.data.local.entities.Flashcard
 import com.olidev.synapse_mobile.ui.components.DeckFormDialog
 import com.olidev.synapse_mobile.ui.components.FloatingActionRow
 import com.olidev.synapse_mobile.ui.components.LoadingAnimation
@@ -91,30 +85,23 @@ fun DeckDetailsScreen(
     }
 
     val selectedColorPairing = colorPairings[uiState.deck?.colorSeed ?: 0]
+    val gridState = rememberLazyStaggeredGridState()
+
+    val isFabExpanded by remember {
+        derivedStateOf { gridState.firstVisibleItemIndex == 0 }
+    }
 
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         floatingActionButton = {
-
             if (uiState.flashcards.isNotEmpty()) {
-                ExtendedFloatingActionButton(
+                BouncingPlayButton(
                     onClick = onStartPracticing,
+                    isExpanded = isFabExpanded,
                     containerColor = selectedColorPairing.color,
-                    contentColor = selectedColorPairing.onColor,
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier
-                        .padding(bottom = spacing.Medium)
-                        .padding(end = spacing.Medium)
-                ) {
-                    Icon(painterResource(R.drawable.play_arrow_24dp), null)
-                    Spacer(modifier = Modifier.width(spacing.Small))
-                    Text(
-                        text = "Start Practicing",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                    contentColor = selectedColorPairing.onColor
+                )
             }
         }
     ) { paddingValues ->
@@ -150,6 +137,7 @@ fun DeckDetailsScreen(
                     )
                 } else {
                     LazyVerticalStaggeredGrid(
+                        state = gridState,
                         modifier = Modifier
                             .widthIn(max = 1000.dp)
                             .padding(horizontal = spacing.Large),
@@ -165,7 +153,7 @@ fun DeckDetailsScreen(
                             )
                         }
                         if (uiState.flashcards.isEmpty()) {
-                            item (span = StaggeredGridItemSpan.FullLine) {
+                            item(span = StaggeredGridItemSpan.FullLine) {
                                 EmptyCardsView(
                                     modifier = Modifier.heightIn(min = 400.dp),
                                     color = selectedColorPairing.color,
@@ -195,7 +183,7 @@ fun DeckDetailsScreen(
                     initialDescription = uiState.deck?.description ?: "",
                     initialColorSeed = uiState.deck?.colorSeed ?: 0,
                     isEditing = true,
-                    onDismiss = { showEditDeckDialog =false },
+                    onDismiss = { showEditDeckDialog = false },
                     onSave = { name, desc, seed ->
                         viewModel.updateDeck(name, desc, seed)
                         showEditDeckDialog = false

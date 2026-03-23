@@ -1,5 +1,6 @@
 package com.olidev.synapse_mobile
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,13 +21,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.olidev.synapse_mobile.ui.AuthState
 import com.olidev.synapse_mobile.ui.MainViewModel
 import com.olidev.synapse_mobile.ui.auth.AuthScreen
 import com.olidev.synapse_mobile.ui.auth.SynapseLogo
 import com.olidev.synapse_mobile.ui.deck_details.DeckDetailsScreen
 import com.olidev.synapse_mobile.ui.home.HomeScreen
+import com.olidev.synapse_mobile.ui.practice_mode.PracticeScreen
 import com.olidev.synapse_mobile.ui.theme.SynapseTheme
+import com.olidev.synapse_mobile.workers.DeckSyncWorker
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,7 +57,8 @@ class MainActivity : ComponentActivity() {
 
             SynapseTheme() {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     when (authState) {
@@ -67,6 +75,7 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 startDestination = startDestination
                             ) {
+
                                 composable("auth") {
                                     AuthScreen(
                                         onAuthComplete = {
@@ -76,6 +85,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
+
                                 composable("home") {
                                     HomeScreen(
                                         windowSize = windowSize,
@@ -84,16 +94,39 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
+
                                 composable(
-                                    route = "deck_details/{deckId}", arguments = listOf(
+                                    route = "deck_details/{deckId}",
+                                    arguments = listOf(
                                         androidx.navigation.navArgument("deckId") {
                                             type = androidx.navigation.NavType.StringType
                                         }
                                     )
-                                ) {
+                                ) { backStackEntry ->
+                                    val deckId = backStackEntry.arguments?.getString("deckId") ?: ""
+
                                     DeckDetailsScreen(
-                                        onNavigateBack = {navController.popBackStack()},
+                                        onNavigateBack = { navController.popBackStack() },
                                         onStartPracticing = {
+                                            navController.navigate("practice/$deckId")
+                                        }
+                                    )
+                                }
+
+                                composable(
+                                    route = "practice/{deckId}",
+                                    arguments = listOf(
+                                        androidx.navigation.navArgument("deckId") {
+                                            type = androidx.navigation.NavType.StringType
+                                        }
+                                    )
+                                ) { backStackEntry ->
+                                    val deckId = backStackEntry.arguments?.getString("deckId") ?: ""
+
+                                    PracticeScreen(
+                                        deckId = deckId,
+                                        onNavigateBack = {
+                                            navController.popBackStack()
                                         }
                                     )
                                 }
@@ -106,4 +139,21 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    fun triggerManualSync(context: Context) {
+        val syncRequest = OneTimeWorkRequestBuilder<DeckSyncWorker>()
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            )
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "manual_sync",
+            ExistingWorkPolicy.REPLACE,
+            syncRequest
+        )
+    }
+
 }

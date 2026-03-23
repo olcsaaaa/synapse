@@ -20,7 +20,7 @@ class DeckSyncWorker @AssistedInject constructor(
     private val deckDao: DeckDao,
     private val api: SynapseApi,
     private val sessionManager: SessionManager
-) : CoroutineWorker(context, workerParams) {
+) : CoroutineWorker( context, workerParams) {
 
     override suspend fun doWork(): Result {
         val userId = sessionManager.userId.first() ?: return Result.failure()
@@ -46,8 +46,6 @@ class DeckSyncWorker @AssistedInject constructor(
                 }else{
                     return Result.retry()
                 }
-
-                deckDao.markAsSynced(unsyncedDecks.map { it.id })
             }
 
             val pullResponse = api.getAllDecks(userId)

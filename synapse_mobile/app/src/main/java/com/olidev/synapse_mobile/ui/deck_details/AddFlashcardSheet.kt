@@ -87,7 +87,7 @@ fun AddFlashCardSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Add new card",
+                "The Flashcard",
                 style = Typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )

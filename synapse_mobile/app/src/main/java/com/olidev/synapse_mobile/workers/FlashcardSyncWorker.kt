@@ -48,10 +48,10 @@ class FlashcardSyncWorker @AssistedInject constructor(
                 val remoteCards = pullResponse.body() ?: emptyList()
                 val freshCards = remoteCards.map { it.toEntity(isSynced = true) }
                 flashcardDao.upsertCards(freshCards)
+                Result.success()
             } else {
                 Result.retry()
             }
-            Result.success()
         } catch (e: Exception) {
             Result.retry()
         }

@@ -1,12 +1,19 @@
 package com.olidev.synapse_mobile
 
 import android.app.Application
-import com.olidev.synapse_mobile.data.local.AppDatabase
-import com.olidev.synapse_mobile.data.local.SynapseApi
-import com.olidev.synapse_mobile.data.repository.DeckRepository
-import com.olidev.synapse_mobile.data.repository.FlashcardRepository
-import com.olidev.synapse_mobile.data.repository.UserRepository
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
-class Synapse : Application()
+class    Synapse : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+}
